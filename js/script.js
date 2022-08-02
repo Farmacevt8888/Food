@@ -183,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
          this.price = price;
          this.classes = classes;
          this.parent = document.querySelector(paretnSelector);
-         this.transfer = 27;
+         this.transfer = 40;
          this.changeToUAH();
       }
 
@@ -193,6 +193,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       render() {
          const element = document.createElement('div');
+
          // устанавливаем класс по умолчанию
          if (this.classes.length === 0) {
             this.element = 'menu__item';
@@ -200,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
          } else {
             this.classes.forEach(className => element.classList.add(className));
          }
-         
+
          element.innerHTML = `
                <img src=${this.src} alt=${this.alt}>
                <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -251,7 +252,61 @@ window.addEventListener('DOMContentLoaded', () => {
 
    ).render();
 
+   //FORMS ==========================================================================================================================
+
+   const forms = document.querySelectorAll('form');
+
+   const message = {
+      loading: 'Загрузка',
+      success: 'Спасибо! Скоро мы с вами свяжемся',
+      failure: 'Что-то пошло не так...'
+   };
+
+   // подвязываем под формы функцию postData
+   forms.forEach(item => {
+      postData(item);
+   });
 
 
+   function postData(form) {
+      form.addEventListener('submit', (e) => {
+         e.preventDefault(); //сбрасываем значениея браузера поумолчанию
+
+         //создание нового блока с сообщением после отправки данных
+         const statusMessage = document.createElement('div'); // создаем блок с сообщением
+         statusMessage.classList.add('status'); // привсаиваем класс окну с сообщением
+         statusMessage.textContent = message.loading; //выводим сообщение о загрузке
+         form.append(statusMessage); // добавляем форму в верстку
+
+         const request = new XMLHttpRequest();
+         request.open('POST', 'server.php');
+
+         // request.setRequestHeader('Content-type', 'multipart/form-data'); // ели прописать заголовки то с fomData данные не будут отправлены на сервер, работает только с JSON
+         request.setRequestHeader('Content-type', 'application/json');
+         const formData = new FormData(form);
+
+         const object = {};
+         formData.forEach(function (value, key) {
+            object[key] = value;
+         });
+
+         const json = JSON.stringify(object);
+
+         // request.send(formData);
+         request.send(json);
+
+         request.addEventListener('load', () => {
+            if (request.status === 200) {
+               console.log(request.response);
+               statusMessage.textContent = message.success; // выводим сообщение 'Спасибо! Скоро мы с вами свяжемся'
+               form.reset(); // очищаем форму после отправки
+               setTimeout(() => {
+                  statusMessage.remove(); // убираем сообщение через заданное время
+               }, 2000);
+            } else {
+               statusMessage.textContent = message.failure; // выводим сообщении об ошибке
+            }
+         });
+      });
+   }
 });
-
