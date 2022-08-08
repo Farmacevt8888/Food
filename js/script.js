@@ -249,7 +249,6 @@ window.addEventListener('DOMContentLoaded', () => {
    //FORMS ==========================================================================================================================
 
    const forms = document.querySelectorAll('form');
-
    const message = {
       loading: 'icons/modal/spinner.svg',
       success: 'Спасибо! Скоро мы с вами свяжемся',
@@ -268,41 +267,73 @@ window.addEventListener('DOMContentLoaded', () => {
 
          //создание нового блока с сообщением после отправки данных
          let statusMessage = document.createElement('img'); // создаем блок с сообщением
-         statusMessage.src = message.loading; 
+         statusMessage.src = message.loading;
          statusMessage.style.cssText = `
             display: block;
             margin: 0 auto;
          `; //выводим спинер загрузки
          form.insertAdjacentElement('afterend', statusMessage); // добавляем спинер под форму в верстку
 
-         const request = new XMLHttpRequest();
-         request.open('POST', 'server.php');
 
-         // request.setRequestHeader('Content-type', 'multipart/form-data'); // ели прописать заголовки то с fomData данные не будут отправлены на сервер, работает только с JSON
-         request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-         const formData = new FormData(form);
+         //отправка данных с помощью fetch ------------------------------------------------
 
-         const object = {};
-         formData.forEach(function (value, key) {
-            object[key] = value;
-         });
 
-         const json = JSON.stringify(object);
+         //отпарвка formData..............................................................................
+         // const formData = new FormData(form);
 
-         // request.send(formData);
-         request.send(json);
+         // fetch('server.php', {
+         //       method: "POST",
+         //       body: formData
+         //    })
+         //    .then(data => data.text())
+         //    .then(data => {
+         //       console.log(data);
+         //       showThanksModal(message.success); // выводим сообщение 'Спасибо! Скоро мы с вами свяжемся'
+         //       statusMessage.remove(); // убираем сообщение о загрузке
 
-         request.addEventListener('load', () => {
-            if (request.status === 200) {
-               console.log(request.response);
-               showThanksModal(message.success); // выводим сообщение 'Спасибо! Скоро мы с вами свяжемся'
-               statusMessage.remove(); // убираем сообщение о загрузке
-               form.reset(); // очищаем форму после отправки
-            } else {
-               showThanksModal(message.failure); // выводим сообщении об ошибке
-            }
-         });
+         //    })
+         //    .catch(() => {
+         //       showThanksModal(message.failure); // выводим сообщении об ошибке
+         //    })
+         //    .finally(() => {
+         //       form.reset(); // очищаем форму после отправки
+         //    })
+         //.....................................................................................
+
+
+
+         //отправка JSON файла............................................................
+            const formData = new FormData(form);
+
+            const object = {};
+            formData.forEach(function (value, key) {
+               object[key] = value;
+            });
+
+            fetch('server.php', {
+                  method: "POST",
+                  headers: {
+                     'Content-type': 'application/json'
+                  },
+                  body: JSON.stringify(object)
+               })
+               .then(data => data.text())
+               .then(data => {
+                  console.log(data);
+                  showThanksModal(message.success); // выводим сообщение 'Спасибо! Скоро мы с вами свяжемся'
+                  statusMessage.remove(); // убираем сообщение о загрузке
+
+               })
+               .catch(() => {
+                  showThanksModal(message.failure); // выводим сообщении об ошибке
+               })
+               .finally(() => {
+                  form.reset(); // очищаем форму после отправки
+               })
+         //................................................................................................................
+
       });
+      //---------------------------------------------------------------------------------------
    }
 
    // окно-сообщение
@@ -322,7 +353,6 @@ window.addEventListener('DOMContentLoaded', () => {
       `;
 
       document.querySelector('.modal').append(thaksModal); // добавляем наш новый блок в modal
-
       // убираем новый блок через заданное время и возвращаем блок отправки формы
       setTimeout(() => {
          thaksModal.remove();
