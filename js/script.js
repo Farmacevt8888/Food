@@ -1,5 +1,5 @@
 'use strict';
-
+alert('НЕ забудь подключить JSON-сервер: npx json-server db.json');
 window.addEventListener('DOMContentLoaded', () => {
 
    // TABS =============================================================================
@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
    //========================================================================================   
 
    // TIMER =============================================================================
-   const deadline = '2022-08-15';
+   const deadline = '2022-10-15';
 
    // получаем разницу между датами
    function getTimeRemaining(endtime) {
@@ -210,20 +210,27 @@ window.addEventListener('DOMContentLoaded', () => {
       }
    }
 
-   //функция получения данных с сервера
-   const getResource = async (url) => {
-      const res = await fetch(url);
-      //устанавливаем вручную показ ошибки, если что-то пойдет не так
-      if (!res.ok) {
-         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-      }
+   // функция получения данных с сервера
+   // const getResource = async (url) => {
+   //    const res = await fetch(url);
+   //    //устанавливаем вручную показ ошибки, если что-то пойдет не так
+   //    if (!res.ok) {
+   //       throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+   //    }
 
-      return await res.json();
-   };
+   //    return await res.json();
+   // };
 
-   getResource('http://localhost:3000/menu')
+   // getResource('http://localhost:3000/menu')
+   //    .then(data => {
+   //       data.forEach(({img, altimg, title, descr, price}) => {
+   //          new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+   //       })
+   //    });
+
+   axios.get('http://localhost:3000/menu')
       .then(data => {
-         data.forEach(({
+         data.data.forEach(({
             img,
             altimg,
             title,
@@ -231,8 +238,8 @@ window.addEventListener('DOMContentLoaded', () => {
             price
          }) => {
             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-         });
-      });
+         })
+      })
 
    //создание элемента на странице динамически (формирует верстку на лету) - этот метод применяеться, если нам нужно что-то построить один раз
    // getResource('http://localhost:3000/menu')
