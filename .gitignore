@@ -8,6 +8,7 @@
 
 # production
 src/
+.vscode/
 
 # misc
 .DS_Store
@@ -19,3 +20,4 @@ src/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
