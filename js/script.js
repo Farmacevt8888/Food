@@ -1,5 +1,5 @@
 'use strict';
-alert('НЕ забудь подключить JSON-сервер: npx json-server db.json');
+// alert('НЕ забудь подключить JSON-сервер: npx json-server db.json');
 window.addEventListener('DOMContentLoaded', () => {
    const tabs = require('./modules/tabs'),
       modal = require('./modules/modal'),
