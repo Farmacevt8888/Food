@@ -1,6 +1,5 @@
-function timer() {
+function timer(id, deadline) {
    // TIMER =============================================================================
-   const deadline = '2022-10-15';
 
    // получаем разницу между датами
    function getTimeRemaining(endtime) {
@@ -64,7 +63,7 @@ function timer() {
       }
    }
 
-   setClock('.timer', deadline);
+   setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

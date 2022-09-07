@@ -1,7 +1,10 @@
-function forms() {
+import {closeModal, openModal} from './modal';
+import {postData} from '../services/services';
+
+function forms(formSelector, modalTimerId) {
    //=========================================FORMS====================================================================
 
-   const forms = document.querySelectorAll('form');
+   const forms = document.querySelectorAll(formSelector);
    const message = {
       loading: 'icons/modal/spinner.svg',
       success: 'Спасибо! Скоро мы с вами свяжемся',
@@ -13,18 +16,7 @@ function forms() {
       bindPostData(item);
    });
 
-   //создаем функцию postData отвечающую за постинг данных
-   const postData = async (url, data) => {
-      const res = await fetch(url, {
-         method: "POST",
-         headers: {
-            'Content-type': 'application/json'
-         },
-         body: data
-      });
-
-      return await res.json();
-   };
+   
 
    //функция отвечающая за привязку постинга
    function bindPostData(form) {
@@ -97,7 +89,7 @@ function forms() {
       const prevModalDialog = document.querySelector('.modal__dialog'); // получаем блок "modal__dialog"
 
       prevModalDialog.classList.add('hide'); // скрываем предыдущий диалог
-      openModal(); // открываем модальное окно
+      openModal('.modal', modalTimerId); // открываем модальное окно
 
       const thaksModal = document.createElement('div'); // создаем новый блок-обвертку
       thaksModal.classList.add('modal__dialog'); // присваеваем ему класс
@@ -114,9 +106,9 @@ function forms() {
          thaksModal.remove();
          prevModalDialog.classList.add('show');
          prevModalDialog.classList.remove('hide');
-         closeModal();
+         closeModal('.modal');
       }, 4000);
    }
 }
 
-module.exports = forms;
+export default forms;
