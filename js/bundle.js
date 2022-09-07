@@ -819,7 +819,7 @@ var __webpack_exports__ = {};
   !*** ./js/script.js ***!
   \**********************/
 
-alert('НЕ забудь подключить JSON-сервер: npx json-server db.json');
+
 window.addEventListener('DOMContentLoaded', () => {
    const tabs = __webpack_require__(/*! ./modules/tabs */ "./js/modules/tabs.js"),
       modal = __webpack_require__(/*! ./modules/modal */ "./js/modules/modal.js"),
